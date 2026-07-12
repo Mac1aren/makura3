@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f1fb">
+  <meta name="robots" content="noindex, nofollow">
+  <title>makura — private</title>
+  <meta name="description" content="beyond the feed.">
+
+  <link rel="preload" as="image" href="avatar.jpg">
+
+  <!-- premium type: one sans + one italic serif accent -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══ living background ═══ -->
+  <div class="mesh" aria-hidden="true">
+    <div class="blob blob--lilac"></div>
+    <div class="blob blob--pink"></div>
+    <div class="blob blob--cyan"></div>
+    <div class="blob blob--cream"></div>
+  </div>
+
+  <!-- iridescent sheen that slowly breathes across the page -->
+  <div class="sheen" aria-hidden="true"></div>
+
+  <!-- soft volumetric light rays -->
+  <div class="rays" aria-hidden="true"></div>
+
+  <!-- light that follows the cursor (desktop) -->
+  <div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
+
+  <!-- ambient bokeh particles (built by JS) -->
+  <div class="particles" id="particles" aria-hidden="true"></div>
+
+  <!-- fine grain -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- ═══ the card ═══ -->
+  <main class="scene">
+    <section class="card" id="card">
+      <div class="card-inner">
+
+        <span class="badge reveal r1">
+          <span class="badge-dot" aria-hidden="true"></span>
+          online now &middot; private
+        </span>
+
+        <div class="avatar-zone reveal r2">
+          <div class="halo" aria-hidden="true"></div>
+          <div class="ring" aria-hidden="true"></div>
+          <div class="avatar-frame">
+            <img src="avatar.jpg" alt="makura" class="avatar" draggable="false">
+          </div>
+          <span class="avatar-heart" aria-hidden="true">♡</span>
+        </div>
+
+        <h1 class="title reveal r3">
+          you found my <em>secret&nbsp;side</em>
+        </h1>
+
+        <p class="subtitle reveal r4">uncensored &middot; unfiltered &middot; just for you</p>
+
+        <!-- frosted peek at the private gallery -->
+        <div class="peek reveal r5" aria-hidden="true">
+          <div class="peek-tile pt1"><span class="peek-blob"></span></div>
+          <div class="peek-tile pt2"><span class="peek-blob"></span></div>
+          <div class="peek-tile pt3">
+            <span class="peek-blob"></span>
+            <span class="peek-more">+247</span>
+          </div>
+          <svg class="peek-lock" viewBox="0 0 20 20" width="18" height="18">
+            <rect x="4" y="8.5" width="12" height="8.5" rx="2.6" fill="#fff"/>
+            <path d="M6.6 8.5 V6.4 a3.4 3.4 0 0 1 6.8 0 V8.5" fill="none" stroke="#fff" stroke-width="2"/>
+            <circle cx="10" cy="12.6" r="1.5" fill="#e076c1"/>
+          </svg>
+        </div>
+
+        <a class="cta reveal r6" id="cta" href="https://fansly.com/makuraaaah/t4?r=meoww" rel="noopener">
+          <span class="cta-border" aria-hidden="true"></span>
+          <span class="cta-shine" aria-hidden="true"></span>
+          <span class="cta-label">
+            unlock me
+            <span class="cta-heart" aria-hidden="true">♡</span>
+          </span>
+        </a>
+
+        <p class="whisper reveal r7" aria-hidden="true">don't keep me waiting&hellip;</p>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
