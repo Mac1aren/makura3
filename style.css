@@ -1,0 +1,676 @@
+/* ================================================================
+   makura — private · a quiet, expensive doorway
+   light luxe · glass · motion · mobile-first · vanilla css
+   every animation is transform/opacity/filter — 60fps friendly
+   ================================================================ */
+
+:root {
+  --milk:      #f6f3fb;
+  --ink:       #3b3350;
+  --ink-soft:  #8a80a3;
+  --lilac:     #c9b8f4;
+  --pink:      #f6b8dd;
+  --cyan:      #aee3f4;
+  --violet:    #8f6ff0;
+  --glass:     rgba(255, 255, 255, 0.42);
+  --glass-edge: rgba(255, 255, 255, 0.85);
+
+  /* driven by js — cursor parallax */
+  --mx: 50%;
+  --my: 40%;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: "Manrope", "Segoe UI", system-ui, sans-serif;
+  background: var(--milk);
+  color: var(--ink);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ================================================================
+   background · mesh blobs
+   ================================================================ */
+
+.mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -6;
+  filter: blur(70px) saturate(1.15);
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.75;
+  will-change: transform;
+}
+
+.blob--lilac {
+  width: 68vmax; height: 68vmax;
+  left: -22vmax; top: -26vmax;
+  background: radial-gradient(circle, #cdb9f8 0%, rgba(205,185,248,0) 65%);
+  animation: blob-a 26s ease-in-out infinite alternate;
+}
+
+.blob--pink {
+  width: 60vmax; height: 60vmax;
+  right: -20vmax; top: -12vmax;
+  background: radial-gradient(circle, #f9c3e2 0%, rgba(249,195,226,0) 65%);
+  animation: blob-b 31s ease-in-out infinite alternate;
+}
+
+.blob--cyan {
+  width: 62vmax; height: 62vmax;
+  left: -14vmax; bottom: -26vmax;
+  background: radial-gradient(circle, #b5e6f6 0%, rgba(181,230,246,0) 65%);
+  animation: blob-c 29s ease-in-out infinite alternate;
+}
+
+.blob--cream {
+  width: 52vmax; height: 52vmax;
+  right: -16vmax; bottom: -20vmax;
+  background: radial-gradient(circle, #fdeadb 0%, rgba(253,234,219,0) 65%);
+  animation: blob-a 34s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes blob-a {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(9vmax, 6vmax) scale(1.12); }
+}
+
+@keyframes blob-b {
+  from { transform: translate(0, 0) scale(1.08); }
+  to   { transform: translate(-8vmax, 7vmax) scale(0.95); }
+}
+
+@keyframes blob-c {
+  from { transform: translate(0, 0) scale(0.95); }
+  to   { transform: translate(7vmax, -8vmax) scale(1.1); }
+}
+
+/* ================================================================
+   iridescent sheen · rays · cursor light
+   ================================================================ */
+
+.sheen {
+  position: fixed;
+  inset: -20%;
+  z-index: -5;
+  background: conic-gradient(
+    from 210deg at 50% 50%,
+    rgba(255, 255, 255, 0)   0deg,
+    rgba(198, 226, 255, 0.20) 70deg,
+    rgba(255, 255, 255, 0)   140deg,
+    rgba(247, 205, 235, 0.20) 210deg,
+    rgba(255, 255, 255, 0)   280deg,
+    rgba(206, 191, 250, 0.22) 330deg,
+    rgba(255, 255, 255, 0)   360deg
+  );
+  animation: sheen-turn 48s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes sheen-turn {
+  from { transform: rotate(0deg) scale(1.15); }
+  to   { transform: rotate(360deg) scale(1.15); }
+}
+
+/* two soft diagonal light rays */
+.rays {
+  position: fixed;
+  inset: -25%;
+  z-index: -4;
+  background:
+    linear-gradient(112deg, transparent 44%, rgba(255,255,255,0.28) 50%, transparent 56%),
+    linear-gradient(76deg,  transparent 46%, rgba(255,255,255,0.16) 50%, transparent 54%);
+  transform: translateX(-14%);
+  animation: rays-drift 26s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes rays-drift {
+  from { transform: translateX(-14%); opacity: 0.7; }
+  to   { transform: translateX(14%);  opacity: 1; }
+}
+
+/* radial glow that follows the pointer — position via css vars */
+.cursor-light {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background: radial-gradient(
+    38vmax 38vmax at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0.12) 42%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+/* ================================================================
+   particles · grain
+   ================================================================ */
+
+.particles {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mote {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.25) 65%,
+    rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0 0 12px 2px rgba(255, 255, 255, 0.35);
+  will-change: transform;
+  animation:
+    mote-rise linear infinite,
+    mote-fade ease-in-out infinite alternate;
+}
+
+@keyframes mote-rise {
+  from { transform: translateY(0)      translateX(0); }
+  to   { transform: translateY(-118vh) translateX(var(--wx, 0px)); }
+}
+
+@keyframes mote-fade {
+  from { opacity: var(--o1, 0.25); }
+  to   { opacity: var(--o2, 0.7); }
+}
+
+/* floating hearts share the mote animations but render as glyphs */
+.mote--heart {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: #f0a0ce;
+  font-weight: 700;
+  text-shadow:
+    0 0 10px rgba(240, 160, 206, 0.8),
+    0 0 22px rgba(200, 150, 240, 0.4);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ================================================================
+   layout
+   ================================================================ */
+
+.scene {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 28px 20px;
+  perspective: 1100px;
+}
+
+/* ================================================================
+   the card — floating glass
+   ================================================================ */
+
+.card {
+  width: min(360px, 100%);
+  border-radius: 30px;
+  position: relative;
+  background: var(--glass);
+  backdrop-filter: blur(22px) saturate(1.35);
+  -webkit-backdrop-filter: blur(22px) saturate(1.35);
+  box-shadow:
+    0 30px 70px -24px rgba(94, 70, 160, 0.4),
+    0 8px 26px rgba(120, 96, 180, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  animation:
+    card-in 1s cubic-bezier(0.22, 1.2, 0.4, 1) 0.1s both,
+    card-float 7s ease-in-out 1.2s infinite alternate;
+  will-change: transform;
+}
+
+/* top glass reflection edge */
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(255, 255, 255, 0.95), transparent);
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(34px) scale(0.95); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    filter: blur(0); }
+}
+
+@keyframes card-float {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-9px); }
+}
+
+.card-inner {
+  padding: 34px 28px 30px;
+  text-align: center;
+}
+
+/* staggered reveal for the content */
+.reveal {
+  opacity: 0;
+  animation: reveal 0.9s cubic-bezier(0.22, 1, 0.4, 1) both;
+}
+
+.r1 { animation-delay: 0.45s; }
+.r2 { animation-delay: 0.6s; }
+.r3 { animation-delay: 0.8s; }
+.r4 { animation-delay: 0.95s; }
+.r5 { animation-delay: 1.1s; }
+.r6 { animation-delay: 1.3s; }
+.r7 { animation-delay: 1.6s; }
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
+}
+
+/* ─── badge ─── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 2.6px;
+  text-transform: uppercase;
+  color: #7d6fa0;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 6px 14px;
+  box-shadow: 0 2px 10px rgba(120, 96, 180, 0.12), inset 0 1px 0 #fff;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d2f8c8, #6fd463 70%);
+  box-shadow: 0 0 8px rgba(120, 220, 110, 0.9);
+  animation: dot-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes dot-breathe {
+  0%, 100% { transform: scale(1);    opacity: 1; }
+  50%      { transform: scale(0.75); opacity: 0.65; }
+}
+
+/* ─── avatar + halo + rotating ring ─── */
+
+.avatar-zone {
+  position: relative;
+  display: inline-block;
+  margin-top: 24px;
+}
+
+/* soft bloom behind the avatar */
+.halo {
+  position: absolute;
+  inset: -26px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(196, 170, 255, 0.5) 0%,
+    rgba(246, 184, 221, 0.3) 45%,
+    rgba(255, 255, 255, 0) 72%);
+  filter: blur(6px);
+  animation: halo-breathe 5.5s ease-in-out infinite alternate;
+}
+
+@keyframes halo-breathe {
+  from { transform: scale(0.94); opacity: 0.75; }
+  to   { transform: scale(1.06); opacity: 1; }
+}
+
+/* slowly rotating gradient ring with a bright head */
+.ring {
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(143, 111, 240, 0)   0deg,
+    rgba(143, 111, 240, 0.75) 60deg,
+    rgba(246, 184, 221, 0.9)  120deg,
+    rgba(174, 227, 244, 0.75) 190deg,
+    rgba(143, 111, 240, 0)   300deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+          mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  animation: ring-turn 9s linear infinite;
+}
+
+@keyframes ring-turn {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.avatar-frame {
+  position: relative;
+  padding: 4px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.55));
+  box-shadow:
+    0 12px 30px -8px rgba(94, 70, 160, 0.45),
+    inset 0 1px 0 #fff;
+  animation: avatar-drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes avatar-drift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-5px); }
+}
+
+.avatar {
+  display: block;
+  width: 122px;
+  height: 122px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* little heart resting on the avatar's edge */
+.avatar-heart {
+  position: absolute;
+  right: -4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(135deg, #f193cd, #b688f2);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 14px rgba(190, 110, 200, 0.55);
+  animation: heart-beat 2.8s ease-in-out infinite;
+}
+
+@keyframes heart-beat {
+  0%, 100% { transform: scale(1); }
+  12%      { transform: scale(1.14); }
+  24%      { transform: scale(1); }
+  36%      { transform: scale(1.1); }
+  48%      { transform: scale(1); }
+}
+
+/* ─── type ─── */
+
+.title {
+  margin-top: 26px;
+  font-size: clamp(28px, 8vw, 34px);
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  line-height: 1.12;
+  color: var(--ink);
+}
+
+.title em {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.16em;
+  background: linear-gradient(96deg, #8f6ff0 10%, #e076c1 55%, #58b6dd 95%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  color: var(--ink-soft);
+}
+
+/* ─── frosted peek at the private gallery ─── */
+
+.peek {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.peek-tile {
+  position: relative;
+  width: 74px;
+  height: 58px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 6px 16px -6px rgba(120, 80, 160, 0.35), inset 0 1px 0 #fff;
+}
+
+/* dreamy color inside each tile, heavily frosted */
+.peek-blob {
+  position: absolute;
+  inset: -30%;
+  filter: blur(14px) saturate(1.3);
+}
+
+.pt1 .peek-blob {
+  background:
+    radial-gradient(circle at 30% 40%, #f0a8d4 0%, transparent 60%),
+    radial-gradient(circle at 75% 65%, #c5a8f0 0%, transparent 65%),
+    linear-gradient(160deg, #fbe3f2, #e8dcfa);
+}
+
+.pt2 .peek-blob {
+  background:
+    radial-gradient(circle at 65% 30%, #eeb2c8 0%, transparent 62%),
+    radial-gradient(circle at 30% 75%, #a8cdf0 0%, transparent 60%),
+    linear-gradient(200deg, #fdeef4, #e3ecfb);
+}
+
+.pt3 .peek-blob {
+  background:
+    radial-gradient(circle at 45% 60%, #d9a8ee 0%, transparent 62%),
+    radial-gradient(circle at 80% 30%, #f0c3b8 0%, transparent 60%),
+    linear-gradient(180deg, #f7e6fb, #fdeff0);
+}
+
+/* the "+247" counter on the last tile — more behind the door */
+.peek-more {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(150, 80, 160, 0.7);
+  background: rgba(120, 70, 150, 0.18);
+}
+
+/* lock hovering over the row */
+.peek-lock {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 3px 8px rgba(120, 60, 140, 0.55));
+  animation: lock-float 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes lock-float {
+  from { transform: translate(-50%, -54%); }
+  to   { transform: translate(-50%, -46%); }
+}
+
+/* ─── THE button ─── */
+
+.cta {
+  position: relative;
+  display: block;
+  margin: 26px auto 0;
+  max-width: 280px;
+  padding: 17px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  overflow: hidden;
+  background:
+    linear-gradient(110deg, #ef7fc4 0%, #b183f2 48%, #f091b4 100%);
+  background-size: 190% 190%;
+  box-shadow:
+    0 14px 34px -10px rgba(230, 110, 185, 0.7),
+    0 4px 14px rgba(177, 131, 242, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  /* reveal is included here because this shorthand overrides .reveal's */
+  animation: reveal 0.9s cubic-bezier(0.22, 1, 0.4, 1) 1.3s both,
+             cta-gradient 7s ease-in-out infinite alternate,
+             cta-breathe 3.4s ease-in-out 2.4s infinite;
+  transition:
+    transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1),
+    box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+@keyframes cta-gradient {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+/* a gentle breath so the eye returns */
+@keyframes cta-breathe {
+  0%, 100% { box-shadow: 0 14px 34px -10px rgba(230,110,185,0.7), 0 4px 14px rgba(177,131,242,0.4), inset 0 1px 0 rgba(255,255,255,0.55); }
+  50%      { box-shadow: 0 18px 46px -10px rgba(230,110,185,0.9), 0 6px 20px rgba(177,131,242,0.55), inset 0 1px 0 rgba(255,255,255,0.55); }
+}
+
+.cta:hover,
+.cta:focus-visible {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow:
+    0 22px 54px -12px rgba(230, 110, 185, 0.95),
+    0 8px 26px rgba(177, 131, 242, 0.6),
+    0 0 30px rgba(246, 184, 221, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.cta:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* thin glass border ring */
+.cta-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* shimmer sweep */
+.cta-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    112deg,
+    transparent 34%,
+    rgba(255, 255, 255, 0.5) 50%,
+    transparent 66%
+  );
+  transform: translateX(-130%);
+  animation: shine 5.2s ease-in-out 2.6s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0%        { transform: translateX(-130%); }
+  36%, 100% { transform: translateX(130%); }
+}
+
+.cta-label {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2.2px;
+  text-transform: lowercase;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(120, 70, 170, 0.45);
+}
+
+.cta-heart {
+  flex: none;
+  font-size: 19px;
+  line-height: 1;
+  transition: transform 0.28s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+.cta:hover .cta-heart {
+  transform: scale(1.25) rotate(-8deg);
+}
+
+/* ─── whisper ─── */
+
+.whisper {
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.6px;
+  color: #a99ec2;
+}
+
+/* ================================================================
+   desktop niceties
+   ================================================================ */
+
+@media (min-width: 640px) {
+  .card { width: 384px; }
+  .card-inner { padding: 40px 34px 34px; }
+  .avatar { width: 134px; height: 134px; }
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; }
+  .particles { display: none; }
+}
